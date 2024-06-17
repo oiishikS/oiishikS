@@ -1,0 +1,29 @@
+name: API Test Master
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Run API tests
+      run: newman run .postman/api-test.json -e .postman/stage-env.json
+
+    - name: Check test results
+      run: |
+        TEST_RESULTS=$(newman run .postman/api-test.json -e .postman/stage-env.json)
+        if echo "$TEST_RESULTS" | grep "failures\": 0"; then
+          echo "All tests passed."
+        else
+          echo "Tests failed. Aborting merge."
+          exit 1
+        fi

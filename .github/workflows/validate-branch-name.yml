@@ -1,0 +1,18 @@
+name: Validate Branch Name
+
+on:
+  create:
+    branches:
+      - '*'
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Validate Branch Name
+      run: |
+        branch_name="${{ github.ref#refs/heads/ }}"
+        if ! [[ "$branch_name" =~ ^(UTE-[0-9]+:|IM2-[0-9]+:|IM-[0-9]+:|Work-Done:).+$ ]]; then
+          echo "Invalid branch name. Branch names must start with 'UTE-', 'IM2-', 'IM-' followed by a number and a colon, or 'Work-Done:'."
+          exit 1
+        fi
