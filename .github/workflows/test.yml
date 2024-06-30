@@ -4,17 +4,17 @@ on:
   pull_request:
     branches:
       - stage
-    
 
 jobs:
   codeCheck:
-    runs-on: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: ./src/
   
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
         node: [14, 16, 18]
 
     steps:
@@ -23,11 +23,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with: 
-          node-version: ${{matrix.node}}
+          node-version: ${{ matrix.node }}
       
       - name: Install dependencies
-        run: | 
-          npm i
+        run: |
+          npm install
           npm run start
       
       - name: Test
