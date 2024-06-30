@@ -1,0 +1,34 @@
+name: test
+
+on:
+  pull_request:
+    branches:
+      - stage
+    
+
+jobs:
+  codeCheck:
+    runs-on: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        working-directory: ./src/
+  
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with: 
+          node-version: ${{matrix.node}}
+      
+      - name: Install dependencies
+        run: | 
+          npm i
+          npm run start
+      
+      - name: Test
+        run: npm run test
