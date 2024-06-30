@@ -4,4 +4,4 @@ const sum = (x,y) => {
 
 module.exports = sum
 
-console.log(10,10)
+console.log(sum(10,10))
