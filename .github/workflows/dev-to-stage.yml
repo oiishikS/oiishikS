@@ -1,0 +1,25 @@
+name: Develop to Stage
+
+on:
+  pull_request:
+    branches:
+      - stage
+
+jobs:
+  check-develop-merge:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Fetch all branches
+      run: git fetch --all
+
+    - name: Check if branch contains develop commits
+      run: |
+        if git log origin/develop..HEAD --oneline | grep -q .; then
+          echo "Commits found on develop..."
+        else
+          echo "Please first commit your changes on develop.."
+          exit 1
+        fi

@@ -1,0 +1,25 @@
+name: API Test Stage
+
+on:
+  push:
+    branches:
+      - stage
+
+jobs:
+  run-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Newman
+      run: npm install -g newman
+
+    - name: Run API tests
+      run: newman run api-test.json -e dev-env.json
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: api-test-results
+        path: newman/*.html

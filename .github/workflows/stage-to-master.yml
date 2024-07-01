@@ -1,0 +1,25 @@
+name: Stage to Master
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  check-stage-merge:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Fetch all branches
+      run: git fetch --all
+
+    - name: Check if branch contains stage commits
+      run: |
+        if git log origin/stage..HEAD --oneline | grep -q .; then
+          echo "Commits found on stage..."
+        else
+          echo "Please first commit your changes on stage.."
+          exit 1
+        fi
